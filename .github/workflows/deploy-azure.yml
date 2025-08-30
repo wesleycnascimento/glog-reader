@@ -43,11 +43,11 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # 6️⃣ Deploy WAR file to Azure Web App (F1)
-      - name: Deploy WAR to Azure Web App
+      # 6️⃣ Deploy JAR file to Azure Web App (F1)
+      - name: Deploy JAR to Azure Web App
         run: |
           az webapp deploy \
             --resource-group rg-lab \
             --name glog-reader \
-            --type war \
-            --src-path target/glog-reader-0.0.1-SNAPSHOT.war
+            --type jar \
+            --src-path target/glog-reader-0.0.1-SNAPSHOT.jar
