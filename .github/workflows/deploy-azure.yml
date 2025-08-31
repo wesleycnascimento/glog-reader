@@ -30,7 +30,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      # 4️⃣ Build the project (skip tests for faster deploy)
+      # 4️⃣ Build the WAR (skip tests for faster deploy)
       - name: Build with Maven
         run: mvn clean package -DskipTests
 
@@ -40,11 +40,12 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # 6️⃣ Deploy the JAR to Azure App Service
-      - name: Deploy Spring Boot JAR to Azure Web App
+      # 6️⃣ Deploy the WAR to Azure App Service (Tomcat)
+      - name: Deploy WAR to Azure Web App
         run: |
           az webapp deploy \
             --resource-group rg-lab \
             --name glog-reader \
-            --type jar \
-            --src-path target/glog-reader-0.0.1-SNAPSHOT.jar
+            --type war \
+            --src-path target/glog-reader-0.0.1-SNAPSHOT.war \
+            --target-path ROOT.war
