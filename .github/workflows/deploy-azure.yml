@@ -31,16 +31,24 @@ jobs:
             ${{ runner.os }}-maven-
 
       # 4️⃣ Build the WAR (skip tests for faster deploy)
-      - name: Build with Maven
+      - name: Build WAR
         run: mvn clean package -DskipTests
 
-      # 5️⃣ Login to Azure using Service Principal
+      # 5️⃣ Azure login using Service Principal
       - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # 6️⃣ Deploy the WAR to Azure App Service (Tomcat)
+      # 6️⃣ Ensure Azure Web App uses Tomcat 10 and Java 17
+      - name: Configure Azure Web App runtime
+        run: |
+          az webapp config set \
+            --resource-group rg-lab \
+            --name glog-reader \
+            --linux-fx-version "TOMCAT|10.1-java17"
+
+      # 7️⃣ Deploy the WAR to Azure Web App as ROOT.war
       - name: Deploy WAR to Azure Web App
         run: |
           az webapp deploy \
