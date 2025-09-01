@@ -21,9 +21,9 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      # 3. Build WAR
+      # 3. Build WAR as ROOT.war
       - name: Build WAR
-        run: mvn clean package
+        run: mvn clean package -DfinalName=ROOT
 
       # 4. Login to Azure
       - name: Azure Login
@@ -31,9 +31,14 @@ jobs:
         with:
           creds: ${{ secrets.azure_credentials }}
 
-      # 5. Deploy WAR to Azure Web App
+      # 5. Cleanup wwwroot (remove old WARs and app folders)
+      - name: Clean old deployment
+        run: |
+          az webapp ssh --name glog-reader --resource-group rg-lab --command "rm -rf /home/site/wwwroot/*"
+
+      # 6. Deploy WAR to Azure Web App as ROOT.war
       - name: Deploy WAR
         uses: azure/webapps-deploy@v2
         with:
-          app-name: glog-reader    # Replace with your Azure Web App name
-          package: target/glog-reader-0.0.1-SNAPSHOT.war
+          app-name: glog-reader
+          package: target/ROOT.war
