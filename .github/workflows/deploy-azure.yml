@@ -1,0 +1,39 @@
+name: Deploy GlogReader to Azure
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Set up Java
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+
+      # 3. Build WAR
+      - name: Build WAR
+        run: mvn clean package
+
+      # 4. Login to Azure
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.azure_credentials }}
+
+      # 5. Deploy WAR to Azure Web App
+      - name: Deploy WAR
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: glog-reader    # Replace with your Azure Web App name
+          package: target/glog-reader-0.0.1-SNAPSHOT.war

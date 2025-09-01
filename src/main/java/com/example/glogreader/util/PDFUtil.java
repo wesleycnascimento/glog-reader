@@ -27,7 +27,7 @@ public class PDFUtil {
         if (!glog.isEmpty() && !book.isEmpty()) {
             if (glog.getOriginalFilename().substring(glog.getOriginalFilename().lastIndexOf('.')).equals(".pdf")) {
                 try {
-                    File pdf = new File(UUID.randomUUID().toString().concat(".pdf"));
+                    File pdf = new File(System.getProperty("java.io.tmpdir"), UUID.randomUUID().toString() + ".pdf");
 
                     try (InputStream in = glog.getInputStream();
                          FileOutputStream fos = new FileOutputStream(pdf)) {
@@ -121,6 +121,10 @@ public class PDFUtil {
                                 model.addAttribute("folderJson", mapper.writeValueAsString(buildFromBook(contentBook, retornoGLOG)));
                             }
                         }
+                    }
+
+                    if (pdf.exists()) {
+                        pdf.delete();
                     }
                 } catch (Exception e) {
                     message = e.getMessage();
