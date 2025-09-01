@@ -17,22 +17,37 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>glog-reader</name>
   <description>Glog reader</description>
+  <packaging>war</packaging>
 
   <properties>
     <java.version>17</java.version>
   </properties>
 
   <dependencies>
-    <!-- Spring Boot Web (includes Tomcat) -->
+    <!-- Spring Boot Web (exclude embedded Tomcat because Azure provides one) -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-tomcat</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <!-- Tomcat provided by Azure -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-tomcat</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- JSP support -->
     <dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-jasper</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>jakarta.servlet</groupId>
@@ -78,6 +93,16 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
           <excludeDevtools>true</excludeDevtools>
+        </configuration>
+      </plugin>
+
+      <!-- WAR plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.4.0</version>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
         </configuration>
       </plugin>
     </plugins>
