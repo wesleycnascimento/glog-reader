@@ -18,7 +18,7 @@ public class GlogReaderController {
 
     @GetMapping("/glogReader")
     public String glogReader() {
-        // Just show the form
+        // Just show the form initially
         return "glogReader"; // maps to webapp/glogReader.jsp
     }
 
