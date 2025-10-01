@@ -18,7 +18,7 @@ public class GlogReaderController {
 
     @GetMapping("/glogReader")
     public String glogReader() {
-        // Just show the form initially
+        // Just show the form
         return "glogReader"; // maps to webapp/glogReader.jsp
     }
 
@@ -34,6 +34,7 @@ public class GlogReaderController {
 
         response.put("message", model.getAttribute("message"));
         response.put("folder", model.getAttribute("folder"));
+        response.put("success", model.getAttribute("success"));
 
         // JSP page to render
         return response;

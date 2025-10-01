@@ -101,24 +101,35 @@ public class PDFUtil {
                             model.addAttribute("message", message);
                         } else {
                             String bookFileName = getFileNameWithoutExtension(book.getOriginalFilename());
+
                             if (!textFileContainsString(book, bookFileName)) {
                                 message = "The imported book file does not contain book structure!";
 
                                 model.addAttribute("message", message);
                             } else {
-                                message = retornoGLOG;
+                                // New condition: compare first 8 bytes of retornoGLOG to stringToCheck
+                                String stringToCheck = bookFileName; // or set as needed
 
-                                model.addAttribute("message", message);
+                                String retornoGLOGPrefix = retornoGLOG.length() >= 8 ? retornoGLOG.substring(0, 8) : retornoGLOG;
 
-                                model.addAttribute("success", "S");
+                                if (!retornoGLOGPrefix.equals(stringToCheck)) {
+                                    message = "The book imported does not belong to the log imported!";
+                                    model.addAttribute("message", message);
+                                } else {
+                                    message = retornoGLOG;
 
-                                String contentBook = readCopybookFromMultipartFile(book);
+                                    model.addAttribute("message", message);
 
-                                model.addAttribute("folder", buildFromBook(contentBook, retornoGLOG));
+                                    model.addAttribute("success", "S");
 
-                                ObjectMapper mapper = new ObjectMapper();
+                                    String contentBook = readCopybookFromMultipartFile(book);
 
-                                model.addAttribute("folderJson", mapper.writeValueAsString(buildFromBook(contentBook, retornoGLOG)));
+                                    model.addAttribute("folder", buildFromBook(contentBook, retornoGLOG));
+
+                                    ObjectMapper mapper = new ObjectMapper();
+
+                                    model.addAttribute("folderJson", mapper.writeValueAsString(buildFromBook(contentBook, retornoGLOG)));
+                                }
                             }
                         }
                     }
@@ -407,7 +418,7 @@ public class PDFUtil {
                 new InputStreamReader(textFile.getInputStream(), StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.contains(stringToCheck)) {
+                if (line.toUpperCase().contains(stringToCheck.toUpperCase())) {
                     return true;
                 }
             }

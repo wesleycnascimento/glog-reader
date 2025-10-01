@@ -46,7 +46,7 @@
         </div>
         <div class="mb-3">
             <label for="input-file-book" class="form-label">📎 Book File</label>
-            <input type="file" class="form-control" id="input-file-book" name="book" accept="application/pdf"/>
+            <input type="file" class="form-control" id="input-file-book" name="book"/>
         </div>
         <div class="mb-3 text-center">
             <button id="sendButton" class="btn btn-primary" type="button">Send</button>
@@ -157,9 +157,12 @@
                     $("#folderTree").html(treeHtml);
                 }
 
-                $("#sendButton").prop("disabled", true);
-                $("#input-file-glog").prop("disabled", true);
-                $("#input-file-book").prop("disabled", true);
+                // Only disable buttons if response.success is present
+                if (response.success) {
+                    $("#sendButton").prop("disabled", true);
+                    $("#input-file-glog").prop("disabled", true);
+                    $("#input-file-book").prop("disabled", true);
+                }
             },
             error: function(xhr) {
                 alert("Error processing files: " + xhr.responseText);
