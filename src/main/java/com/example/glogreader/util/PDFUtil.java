@@ -112,7 +112,7 @@ public class PDFUtil {
 
                                 String retornoGLOGPrefix = retornoGLOG.length() >= 8 ? retornoGLOG.substring(0, 8) : retornoGLOG;
 
-                                if (!retornoGLOGPrefix.equals(stringToCheck)) {
+                                if (!retornoGLOGPrefix.toUpperCase().equals(stringToCheck.toUpperCase())) {
                                     message = "The book imported does not belong to the log imported!";
                                     model.addAttribute("message", message);
                                 } else {
